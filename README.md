@@ -14,28 +14,30 @@ After the result is calculated and rendered, the games table is automatically de
 
 * clone or fork the repo : https://github.com/sixtine-c/rock_paper_scissors_api
 
-* please don't forget to bundle
+* please don't forget to bundle:
 
   ```bash
     bundle install
   ```
 
-* Create the DB with following commands
+* Create the DB with following commands:
   ```bash
     rails db:create
     rails db:migrate
   ```
 
-* How to access the API endpoint
+* Launch the server:
    ```bash
     rails s
   ```
+* Access the API Endpoint:
   http://localhost:3000 \
   OR \
   http://localhost:3000/api/v1/games/result
 
+## Play the game
 
-* How to play a move \
+* How to play a move:
   ```bash
     curl -i -X POST \
       -H 'Content-Type: application/json'    \
@@ -43,12 +45,12 @@ After the result is calculated and rendered, the games table is automatically de
       http://localhost:3000/api/v1/games
   ```
 
-* How to get the result
+* How to get the result: \
   refresh http://localhost:3000
   OR
   http://localhost:3000/api/v1/games/result
 
-* Testing with Rspec with command line
+* Testing with Rspec with command line:
   ```bash
     rails spec
   ```
