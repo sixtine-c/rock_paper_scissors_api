@@ -30,7 +30,7 @@ After the result is calculated and rendered, the games table is automatically de
    ```bash
     rails s
   ```
-* Access the API Endpoint:
+* Access the API Endpoint: \
   http://localhost:3000 \
   OR \
   http://localhost:3000/api/v1/games/result
@@ -46,7 +46,7 @@ After the result is calculated and rendered, the games table is automatically de
   ```
 
 * How to get the result: \
-  refresh http://localhost:3000
+  Refresh http://localhost:3000
   OR
   http://localhost:3000/api/v1/games/result
 
