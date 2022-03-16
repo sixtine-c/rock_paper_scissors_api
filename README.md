@@ -50,7 +50,7 @@ After the result is calculated and rendered, the games table is automatically de
   OR
   http://localhost:3000/api/v1/games/result
 
-* Testing with Rspec with command line:
+* How to launch the tests:
   ```bash
     rails spec
   ```
