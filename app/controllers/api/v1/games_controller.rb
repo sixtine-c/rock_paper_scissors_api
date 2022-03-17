@@ -47,11 +47,6 @@ module Api
         @result
       end
 
-      def render_error
-        render json: { errors: @game.errors.full_messages },
-               status: :unprocessable_entity
-      end
-
       def find_winner
         winning_moves = {
           'rock' => 'scissors',
@@ -84,6 +79,11 @@ module Api
             winner: winner
           }
         }
+      end
+
+      def render_error
+        render json: { errors: @game.errors.full_messages },
+               status: :unprocessable_entity
       end
     end
   end
