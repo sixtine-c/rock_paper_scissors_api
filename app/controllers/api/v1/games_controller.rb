@@ -3,59 +3,48 @@
 module Api
   module V1
     class GamesController < ApplicationController
-      after_action :destroy_previous_game, only: :result
+      after_action :destroy_previous_game, only: :create
 
       def create
         @game = Game.new(game_params)
         if @game.save
-          create_computer_move if @game.name != 'Bot'
-
-          render :result
-
+          create_bot_move
+          result
+          render json: JSON.pretty_generate(@result), status: :created
         else
           render_error
         end
       end
 
-      def result
-        @games = Game.all
-
-        if @games.empty?
-          @result = "Welcome to 'Rock - paper - scissors', make a move to play =>
-          curl -i -X POST -H 'Content-Type: application/json' -d '{ 'name': 'Your name', 'move': 'rock, paper or scissors' }' http://localhost:3000/api/v1/games"
-          render json: @result
-        else
-          @moves = []
-          @games.each do |game|
-            @moves << game
-          end
-
-          find_winner
-          render json: @result, status: :created, location: @result
-        end
+      def index
+        @intro = "Welcome to 'Rock - paper - scissors', make a move to play =>
+        curl -i -X POST -H 'Content-Type: application/json' -d '{ 'name': 'Your name', 'move': 'rock, paper or scissors' }' http://localhost:3000/api/v1/games"
+        render json: @intro
       end
 
       private
+
+      def game_params
+        params.require(:game).permit(:name, :move)
+      end
 
       def destroy_previous_game
         Game.destroy_all
       end
 
-      def create_computer_move
-        require 'uri'
-        require 'net/http'
-        require 'json'
-
-        uri = URI('http://localhost:3000/api/v1/games')
-        http = Net::HTTP.new(uri.host, uri.port)
-        req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
-        req.body = { name: 'Bot', move: %w[rock paper scissors].sample }.to_json
-        http.request(req)
-        puts req.body
+      def create_bot_move
+        Game.create!(name: 'Bot',
+                     move: %w[rock paper scissors].sample)
       end
 
-      def game_params
-        params.require(:game).permit(:name, :move)
+      def result
+        @games = Game.all
+        @moves = []
+        @games.each do |game|
+          @moves << game
+        end
+        find_winner
+        @result
       end
 
       def render_error
