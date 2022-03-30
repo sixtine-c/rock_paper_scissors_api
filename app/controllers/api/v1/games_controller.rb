@@ -3,16 +3,16 @@
 module Api
   module V1
     class GamesController < ApplicationController
-      after_action :destroy_previous_game, only: :create
 
       def create
-        @game = Game.new(game_params)
-        if @game.save
+        @game_player = Game.new(game_params)
+        if @game_player.valid?
           create_bot_move
           result
           render json: JSON.pretty_generate(@result), status: :created
         else
-          render_error
+          render json: JSON.pretty_generate(@game_player.errors.each {|k, v| puts "#{k.capitalize}: #{v}"}), status: :bad_request
+
         end
       end
 
@@ -28,21 +28,12 @@ module Api
         params.require(:game).permit(:name, :move)
       end
 
-      def destroy_previous_game
-        Game.destroy_all
-      end
-
       def create_bot_move
-        Game.create!(name: 'Bot',
+        @game_bot = Game.new(name: 'Bot',
                      move: %w[rock paper scissors].sample)
       end
 
       def result
-        @games = Game.all
-        @moves = []
-        @games.each do |game|
-          @moves << game
-        end
         find_winner
         @result
       end
@@ -53,11 +44,11 @@ module Api
           'scissors' => 'paper',
           'paper' => 'rock'
         }
-        tie = @moves.first.move == @moves.last.move
+        tie = @game_player.move == @game_bot.move
         winner = if tie == true
                    "There's no winner here!"
                  else
-                   winning_moves[@moves.first.move] == @moves.last.move ? @moves.first.name : @moves.last.name
+                   winning_moves[@game_player.move] == @game_bot.move ? @game_player.name : @game_bot.name
                  end
         create_results(winner, tie)
       end
@@ -66,12 +57,12 @@ module Api
         @result = {
           "moves": [
             {
-              name: @moves.first.name,
-              move: @moves.first.move
+              name: @game_player.name,
+              move: @game_player.move
             },
             {
-              name: @moves.last.name,
-              move: @moves.last.move
+              name: @game_bot.name,
+              move: @game_bot.move
             }
           ],
           "result": {

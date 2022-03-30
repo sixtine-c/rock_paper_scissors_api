@@ -27,8 +27,7 @@ RSpec.describe 'Api::V1::Games', type: :request do
     scenario 'invalid game attributes' do
       post '/api/v1/games', params: { 'game' => invalid_attributes_player }
 
-      expect(response.status).to eq(422)
-      expect(Game.count).to eq(0)
+      expect(response.status).to eq(400)
     end
 
     it 'returns a game result in the JSON response' do
