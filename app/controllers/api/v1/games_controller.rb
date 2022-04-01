@@ -3,16 +3,14 @@
 module Api
   module V1
     class GamesController < ApplicationController
-
       def create
         @game_player = Game.new(game_params)
         if @game_player.valid?
           create_bot_move
-          result
+          find_winner
           render json: JSON.pretty_generate(@result), status: :created
         else
-          render json: JSON.pretty_generate(@game_player.errors.each {|k, v| puts "#{k.capitalize}: #{v}"}), status: :bad_request
-
+          render_error
         end
       end
 
@@ -30,12 +28,7 @@ module Api
 
       def create_bot_move
         @game_bot = Game.new(name: 'Bot',
-                     move: %w[rock paper scissors].sample)
-      end
-
-      def result
-        find_winner
-        @result
+                             move: %w[rock paper scissors].sample)
       end
 
       def find_winner
@@ -73,8 +66,8 @@ module Api
       end
 
       def render_error
-        render json: { errors: @game.errors.full_messages },
-               status: :unprocessable_entity
+        render json: JSON.pretty_generate({ errors: @game_player.errors.each { |v| puts "#{v}"}}),
+               status: :bad_request
       end
     end
   end

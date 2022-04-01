@@ -39,7 +39,7 @@ After the result is calculated and rendered, the games table is automatically de
   ```bash
     curl -i -X POST \
       -H 'Content-Type: application/json'    \
-      -d '{ "name": "your-name", "move": "your-move" }' \
+      -d '{ "name": "your-name", "move": "rock, paper or scissors" }' \
       http://localhost:3000/api/v1/games
   ```
   The result will be sent in the JSON response
